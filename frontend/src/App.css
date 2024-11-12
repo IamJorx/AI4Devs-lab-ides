@@ -25,12 +25,17 @@ body {
 
 .App-header {
   background-color: var(--secondaryColor);
-  padding: 10px 20px; /* Reducir la altura del header */
+  padding: 20px;
   width: 100%; /* Asegurar que ocupe todo el ancho de la pantalla */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--boxShadow);
+  position: fixed; /* Fijar el header en la parte superior */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Asegurar que el header esté por encima del contenido */
 }
 
 .App-main {
@@ -38,7 +43,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 60px); /* Ajustar la altura del main */
+  height: calc(100vh - 60px);
+  padding-top: 60px; /* Añadir espacio para el header fijo */
 }
 
 .App-link {
@@ -66,8 +72,28 @@ button {
 }
 
 button:hover {
-  background-color: #ffffff;
-  color: var(--primaryColor);
+  background-color: var(--gamboge);
+  color: var(--secondaryColor);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    backdrop-filter: blur(0);
+  }
+  to {
+    backdrop-filter: blur(5px);
+  }
 }
 
 .modal {
@@ -80,8 +106,9 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(5px);
-  overflow: auto; /* Agregar scroll al modal */
+  overflow: auto;
+  z-index: 2000; /* Asegurar que el modal esté por encima del header */
+  animation: backdropFadeIn 0.3s ease forwards;
 }
 
 .modal-content {
@@ -91,15 +118,15 @@ button:hover {
   box-shadow: var(--boxShadow);
   position: relative;
   border: 1px solid var(--glassBorder);
-  backdrop-filter: blur(10px);
-  max-height: 90vh; /* Ajustar el tamaño del modal para que no supere el alto de la pantalla */
-  overflow-y: auto; /* Agregar scroll vertical al contenido del modal */
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s ease forwards;
 }
 
 .close {
   position: absolute;
   top: 10px;
-  right: 20px; /* Ajustar la posición del botón de cierre */
+  right: 20px;
   font-size: 1.5em;
   cursor: pointer;
 }
