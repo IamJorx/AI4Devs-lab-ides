@@ -1,0 +1,71 @@
+@import '../styles/variables.css';
+
+form {
+  display: flex;
+  flex-direction: column;
+  background: var(--glassBackground);
+  padding: 20px;
+  border-radius: var(--borderRadius);
+  box-shadow: var(--boxShadow);
+  border: 1px solid var(--glassBorder);
+  backdrop-filter: blur(10px);
+  width: 400px; /* Ancho fijo */
+  max-width: 90%; /* Ancho máximo relativo al viewport */
+  margin: 0 auto; /* Centrar el formulario horizontalmente */
+}
+
+div {
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--textColor);
+  text-align: left; /* Alinear los labels a la izquierda */
+  width: 90%; /* Alinear el label con el input */
+}
+
+input {
+  width: 90%; /* Ajustar el ancho de los inputs al 90% del contenedor */
+  padding: 10px;
+  border: 1px solid var(--secondaryColor);
+  border-radius: var(--borderRadius);
+  background: var(--backgroundColor);
+  color: var(--textColor);
+  box-shadow: inset 4px 4px 6px rgba(0, 0, 0, 0.4), inset -4px -4px 6px rgba(255, 255, 255, 0.1);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primaryColor);
+}
+
+button {
+  padding: 10px;
+  background-color: var(--primaryColor);
+  color: var(--textColor);
+  border: none;
+  border-radius: var(--borderRadius);
+  cursor: pointer;
+  box-shadow: var(--boxShadow);
+  margin-top: 20px; /* Agregar margen superior al botón */
+}
+
+button:hover {
+  background-color: #ffffff;
+  color: var(--primaryColor);
+}
+
+.error {
+  color: var(--errorColor);
+  font-size: 0.875em;
+  position: relative; /* Cambiar a relativo */
+  width: 90%; /* Alinear el error con el input */
+  text-align: left; /* Alinear el error a la izquierda */
+  margin-top: 5px; /* Agregar margen superior al mensaje de error */
+}
