@@ -9,11 +9,28 @@ const AddCandidateForm: React.FC = () => {
   const [address, setAddress] = useState('');
   const [education, setEducation] = useState('');
   const [experience, setExperience] = useState('');
+  const [cv, setCv] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type)) {
+        setErrors((prevErrors) => ({ ...prevErrors, cv: 'Solo se permiten archivos PDF o DOCX' }));
+        setCv(null);
+      } else if (file.size > 5 * 1024 * 1024) {
+        setErrors((prevErrors) => ({ ...prevErrors, cv: 'El archivo no debe superar los 5 MB' }));
+        setCv(null);
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, cv: '' }));
+        setCv(file);
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,6 +44,7 @@ const AddCandidateForm: React.FC = () => {
     if (!address) newErrors.address = 'La dirección es obligatoria';
     if (!education) newErrors.education = 'La educación es obligatoria';
     if (!experience) newErrors.experience = 'La experiencia es obligatoria';
+    if (!cv) newErrors.cv = 'El CV es obligatorio';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -109,6 +127,16 @@ const AddCandidateForm: React.FC = () => {
             onChange={(e) => setExperience(e.target.value)}
           />
           {errors.experience && <span className="error">{errors.experience}</span>}
+        </div>
+        <div>
+          <label htmlFor="cv">Cargar CV (PDF o DOCX, máx. 5MB):</label>
+          <input
+            type="file"
+            id="cv"
+            accept=".pdf, .docx"
+            onChange={handleFileChange}
+          />
+          {errors.cv && <span className="error">{errors.cv}</span>}
         </div>
         <button type="submit">Guardar Candidato</button> {/* Cambiar el texto del botón */}
       </form>
