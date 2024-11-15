@@ -33,7 +33,7 @@ const AddCandidateForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
@@ -49,14 +49,49 @@ const AddCandidateForm: React.FC = () => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
-      // Aquí puedes manejar el envío del formulario
-      console.log('Formulario enviado');
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('lastName', lastName);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('address', address);
+      formData.append('education', education);
+      formData.append('experience', experience);
+      if (cv) {
+        formData.append('cv', cv);
+      }
+
+      try {
+        const response = await fetch('http://localhost:3010/api/candidates', {
+          method: 'POST',
+          body: formData,
+        });
+        console.log('🚀 ~ handleSubmit ~ response:', response);
+
+        if (response.ok) {
+          console.log('Formulario enviado');
+        } else {
+          console.error('Error al enviar el formulario');
+        }
+      } catch (error) {
+        console.error('Error al enviar el formulario', error);
+      }
+    }
+  };
+
+  const testGetEndpoint = async () => {
+    try {
+      const response = await fetch('http://localhost:3010/');
+      const data = await response.text();
+      console.log('GET / response:', data);
+    } catch (error) {
+      console.error('Error al probar el endpoint GET /', error);
     }
   };
 
   return (
     <div>
-      <h2>Formulario de Inscripción de Candidato</h2> {/* Cambiar el título del formulario */}
+      <h2>Formulario de Inscripción de Candidato</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Nombre:</label>
@@ -138,8 +173,9 @@ const AddCandidateForm: React.FC = () => {
           />
           {errors.cv && <span className="error">{errors.cv}</span>}
         </div>
-        <button type="submit">Guardar Candidato</button> {/* Cambiar el texto del botón */}
+        <button type="submit">Guardar Candidato</button>
       </form>
+      <button onClick={testGetEndpoint}>Probar GET /</button>
     </div>
   );
 };
