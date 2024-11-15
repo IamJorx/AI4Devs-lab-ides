@@ -11,6 +11,10 @@ const AddCandidateForm: React.FC = () => {
   const [experience, setExperience] = useState('');
   const [cv, setCv] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,6 +39,7 @@ const AddCandidateForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitStatus(null);
     const newErrors: { [key: string]: string } = {};
 
     if (!name) newErrors.name = 'El nombre es obligatorio';
@@ -69,29 +74,43 @@ const AddCandidateForm: React.FC = () => {
         console.log('🚀 ~ handleSubmit ~ response:', response);
 
         if (response.ok) {
-          console.log('Formulario enviado');
+          setSubmitStatus({
+            success: true,
+            message: '¡Candidato añadido exitosamente!'
+          });
+          // Clear form
+          setName('');
+          setLastName('');
+          setEmail('');
+          setPhone('');
+          setAddress('');
+          setEducation('');
+          setExperience('');
+          setCv(null);
+          setErrors({});
         } else {
-          console.error('Error al enviar el formulario');
+          setSubmitStatus({
+            success: false,
+            message: 'Error al añadir el candidato. Por favor, intente nuevamente.'
+          });
         }
       } catch (error) {
-        console.error('Error al enviar el formulario', error);
+        setSubmitStatus({
+          success: false,
+          message: 'Error de conexión. Por favor, verifique su conexión a internet.'
+        });
       }
-    }
-  };
-
-  const testGetEndpoint = async () => {
-    try {
-      const response = await fetch('http://localhost:3010/');
-      const data = await response.text();
-      console.log('GET / response:', data);
-    } catch (error) {
-      console.error('Error al probar el endpoint GET /', error);
     }
   };
 
   return (
     <div>
       <h2>Formulario de Inscripción de Candidato</h2>
+      {submitStatus && (
+        <div className={`status-message ${submitStatus.success ? 'success' : 'error'}`}>
+          {submitStatus.message}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Nombre:</label>
@@ -175,7 +194,6 @@ const AddCandidateForm: React.FC = () => {
         </div>
         <button type="submit">Guardar Candidato</button>
       </form>
-      <button onClick={testGetEndpoint}>Probar GET /</button>
     </div>
   );
 };
